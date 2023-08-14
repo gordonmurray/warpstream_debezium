@@ -4,7 +4,7 @@ Trying out WarpStream as a Kafka alternative with Debezium. Read more about what
 Install the Warpstream agent locally using
 
 ```
-curl https://console.warpstream.com/install.sh | bas
+curl https://console.warpstream.com/install.sh | bash
 ```
 
 Log in to the Warpstream console to get your pool name, Cluster ID and API key at [https://console.warpstream.com](https://console.warpstream.com)
