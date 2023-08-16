@@ -1,5 +1,5 @@
 # WarpStream with Debezium
-Trying out WarpStream as a Kafka alternative with Debezium. Read more about what WarpStream from [Kafka is dead, long live Kafka](https://www.warpstream.com/blog/kafka-is-dead-long-live-kafka)
+Trying out WarpStream as a Kafka alternative with Debezium. Read more about WarpStream from [Kafka is dead, long live Kafka](https://www.warpstream.com/blog/kafka-is-dead-long-live-kafka)
 
 Install the Warpstream agent locally using
 
