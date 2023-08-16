@@ -1,0 +1,20 @@
+version: '3.1'
+services:
+  mariadb:
+    image: mariadb:10.6.14
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: test_db
+    ports:
+      - "3306:3306"
+
+  debezium:
+    image: debezium/connect:latest
+    depends_on:
+      - mariadb
+    environment:
+          BOOTSTRAP_SERVERS: api-xxxxxxxxxx.discovery.prod-z.us-east-1.warpstream.com:9092
+          CONFIG_STORAGE_TOPIC: debezium_connect_config
+          OFFSET_STORAGE_TOPIC: debezium_connect_offsets
+    volumes:
+      - ./debezium/connector.json/:/kafka/connector.json
