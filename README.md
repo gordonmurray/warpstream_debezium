@@ -125,4 +125,15 @@ INSERT INTO products (name, price) VALUES
     ('Organic Coconut Milk', 2.49),
     ('Free Range Eggs', 4.99),
     ('Grass Fed Beef', 8.99);
-    ```
+```
+
+Check your s3 bucket and you'll be able to see your data in a custom WarpStream format, in a folder for each Virtual cluster:
+
+```
+aws s3 ls s3://my-test-bucket/
+```
+
+```
+warpstream/
+  vci_108c3ae4_0896_4d96_8f02_e5c8ea2c69c8/
+```
