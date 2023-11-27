@@ -74,7 +74,7 @@ Create an initial Connector JSON file for Debezium using the following JSON:
 Run `docker-compose up -d` and connect to the Debezium container:
 
 ```
-docker exec -it warpstream-debezium-1 /bin/bash
+docker exec -it debezium /bin/bash
 ```
 
 Create a Connector in Debezium:
@@ -93,12 +93,6 @@ Check Connector status:
 
 ```
 curl localhost:8083/connectors/my_database/status
-```
-
-Delete a connector:
-
-```
-curl -X DELETE localhost:8083/connectors/my_database
 ```
 
 Use the Kafka CLI to list topics in WarpStream
