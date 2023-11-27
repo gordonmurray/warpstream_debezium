@@ -2,19 +2,23 @@ version: '3.1'
 services:
   mariadb:
     image: mariadb:10.6.14
+    container_name: mariadb
     environment:
-      MYSQL_ROOT_PASSWORD: root_password
-      MYSQL_DATABASE: test_db
+      MYSQL_ROOT_PASSWORD: rootpassword
+    volumes:
+      - ./files/mariadb.cnf:/etc/mysql/mariadb.conf.d/mariadb.cnf
+      - ./files/init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - "3306:3306"
 
   debezium:
     image: debezium/connect:latest
+    container_name: debezium
     depends_on:
       - mariadb
     environment:
-          BOOTSTRAP_SERVERS: api-xxxxxxxxxx.discovery.prod-z.us-east-1.warpstream.com:9092
-          CONFIG_STORAGE_TOPIC: debezium_connect_config
-          OFFSET_STORAGE_TOPIC: debezium_connect_offsets
+          BOOTSTRAP_SERVERS: api-63386018-8a5e-40f6-a01a-2f1d42b00949.discovery.prod-z.us-east-1.warpstream.com:9092
+          CONFIG_STORAGE_TOPIC: connect-configs
+          OFFSET_STORAGE_TOPIC: connect-offsets
     volumes:
-      - ./debezium/connector.json/:/kafka/connector.json
+      - ./files/connector.json/:/kafka/connector.json
