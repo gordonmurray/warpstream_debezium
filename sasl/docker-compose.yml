@@ -1,0 +1,27 @@
+version: '3.1'
+services:
+  mariadb:
+    image: mariadb:10.6.14
+    container_name: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+    volumes:
+      - ./files/mariadb.cnf:/etc/mysql/mariadb.conf.d/mariadb.cnf
+      - ./files/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "3306:3306"
+
+  debezium:
+    image: debezium/connect:latest
+    container_name: debezium
+    depends_on:
+      - mariadb
+    environment:
+      BOOTSTRAP_SERVERS: serverless.warpstream.com:9092
+      CONNECT_SASL_MECHANISM: PLAIN
+      CONNECT_SECURITY_PROTOCOL: SASL_SSL
+      CONNECT_SASL_JAAS_CONFIG: "org.apache.kafka.common.security.plain.PlainLoginModule required username='ccun_99e3458e4ba4e20de8f577f1318e02d93a80c3986719e70397af249c51496745' password='ccp_0d98febef9a2fffd7aa3823f125e92690d2b0e561664730225e5d25777e62589';"
+      CONFIG_STORAGE_TOPIC: connect-configs
+      OFFSET_STORAGE_TOPIC: connect-offsets
+    volumes:
+      - ./files/connector.json/:/kafka/connector.json
