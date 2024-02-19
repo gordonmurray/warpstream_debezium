@@ -4,7 +4,7 @@ Trying out WarpStream as a Kafka alternative with Debezium.
 
 ### Secure
 
-Connect Debezium to [WarpStream using SASL](./sasl/)
+Connect Debezium to [WarpStream Serverless - using SASL](./sasl/)
 
 ### Insecure
 
