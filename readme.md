@@ -8,7 +8,7 @@ Connect Debezium to [WarpStream using SASL](./sasl/)
 
 ### Insecure
 
-Connect Debezium in [WarpStream in plain text](/insecure/)
+Connect Debezium to [WarpStream using plain text](/insecure/)
 
 In both folders, an example docker-compose.yml file is provided that launches a mariadb and a debezium container
 
