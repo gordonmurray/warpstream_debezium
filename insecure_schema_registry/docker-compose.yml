@@ -1,0 +1,32 @@
+version: '3.1'
+services:
+  mariadb:
+    image: mariadb:10.6.14
+    container_name: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+    volumes:
+      - ./files/mariadb.cnf:/etc/mysql/mariadb.conf.d/mariadb.cnf
+      - ./files/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "3306:3306"
+
+  debezium:
+    image: debezium/connect:latest
+    container_name: debezium
+    depends_on:
+      - mariadb
+    environment:
+          BOOTSTRAP_SERVERS: api-xxxxxx.warpstream.com:9092
+          CONFIG_STORAGE_TOPIC: connect-configs
+          OFFSET_STORAGE_TOPIC: connect-offsets
+    volumes:
+      - ./files/connector.json/:/kafka/connector.json
+      - ./apicurio/apicurio-registry-connect-converter/:/kafka/connect/apicurio:ro
+
+  apicurio:
+    image: apicurio/apicurio-registry-mem:latest-release
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: api-xxxxxx.warpstream.com:9092
+    ports:
+      - "8081:8080"
