@@ -1,0 +1,67 @@
+version: '3.1'
+services:
+  mariadb:
+    image: mariadb:10.6.14
+    container_name: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+    volumes:
+      - ./files/mariadb.cnf:/etc/mysql/mariadb.conf.d/mariadb.cnf
+      - ./files/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "3306:3306"
+
+  debezium:
+    image: debezium/connect:latest
+    container_name: debezium
+    depends_on:
+      - mariadb
+    environment:
+      BOOTSTRAP_SERVERS: serverless.warpstream.com:9092
+      CONNECT_SASL_MECHANISM: PLAIN
+      CONNECT_SECURITY_PROTOCOL: SASL_SSL
+      CONNECT_SASL_JAAS_CONFIG: "org.apache.kafka.common.security.plain.PlainLoginModule required username='ccun_xxxxxxxxxx' password='ccp_xxxxxxxxxx';"
+      CONFIG_STORAGE_TOPIC: connect-configs
+      OFFSET_STORAGE_TOPIC: connect-offsets
+      CONNECT_PRODUCER_SASL_MECHANISM: PLAIN
+      CONNECT_PRODUCER_SECURITY_PROTOCOL: SASL_SSL
+      CONNECT_PRODUCER_SASL_JAAS_CONFIG: "org.apache.kafka.common.security.plain.PlainLoginModule required username='ccun_xxxxxxxxxx' password='ccp_xxxxxxxxxx';"
+      CONNECT_CONSUMER_SASL_MECHANISM: PLAIN
+      CONNECT_CONSUMER_SECURITY_PROTOCOL: SASL_SSL
+      CONNECT_CONSUMER_SASL_JAAS_CONFIG: "org.apache.kafka.common.security.plain.PlainLoginModule required username='ccun_xxxxxxxxxx' password='ccp_xxxxxxxxxx';"
+      AWS_ACCESS_KEY_ID: minio
+      AWS_SECRET_ACCESS_KEY: minio123
+    volumes:
+      - ./files/connector_source.json:/kafka/connector_source.json
+      - ./files/connector_sink.json:/kafka/connector_sink.json
+      - ./files/kafka-connect-s3:/kafka/connect/kafka-connect-s3
+      - ./files/apicurio/apicurio-registry-connect-converter/:/kafka/connect/apicurio:ro
+
+  apicurio:
+    image: apicurio/apicurio-registry-mem:latest-release
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: serverless.warpstream.com:9092
+    ports:
+      - "8081:8080"
+
+  minio:
+    image: minio/minio:latest
+    container_name: minio
+    environment:
+      MINIO_ROOT_USER: minio
+      MINIO_ROOT_PASSWORD: minio123
+    command: server /data
+    ports:
+      - "9000:9000"
+
+  init-minio:
+    image: minio/mc:latest
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "
+      echo 'Waiting for MinIO to start...' &&
+      sleep 10 &&
+      /bin/mc alias set myminio http://minio:9000 minio minio123 &&
+      /bin/mc mb myminio/mybucket
+      "
