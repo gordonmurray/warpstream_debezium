@@ -2,17 +2,21 @@
 
 Trying out WarpStream as a Kafka alternative with Debezium.
 
-### Secure
+### Insecure connection
 
-Connect Debezium to [WarpStream Serverless - using SASL](./sasl/)
+Make an insecure connection from Debezium to [WarpStream using plain text](/insecure/)
 
-### Insecure
+### Secure connection
 
-Connect Debezium to [WarpStream using plain text](/insecure/)
+Make a secure connection from Debezium to [WarpStream Serverless - using SASL](./sasl/)
 
 ### Apicurio Schema registry
 
 Connect Debezium to WarpStream using [Avro serialization and Apicurio schema registry](/insecure_schema_registry/)
+
+### Sink data to S3 using Parquet format
+
+Connect Debezium securely to WarpStream using Avro serialization and [sink the data to S3 in Parquet format](/secure_s3_sink)
 
 ---
 
